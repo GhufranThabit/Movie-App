@@ -5,51 +5,55 @@
 const searchFieldElement = document.getElementById("search-input");
 const cardsContainer = document.getElementById("cards-container");
 const cardList = document.getElementById("card-list");
-// const list = document.getElementById("list-item");
 const resultsContainer = document.getElementById("results-container");
 
 searchMovie(400);
 async function searchMovie(searchTerm) {
-  cardList.innerHTML = "";
-  const url = `https://www.omdbapi.com/?s=${searchTerm}&apikey=a7a94abb`;
-  const response = await fetch(url);
-  const data = await response.json();
-  const searchData = data.Search;
-  // console.log(searchData);
+  try {
+    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=1&apikey=a7a94abb`;
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.Response == "True") {
+      renderResults(data.Search);
+      document.getElementById("error-message").innerHTML = "";
+    }
+  } catch (error) {
+    document.getElementById("error-message").innerHTML = error;
+  }
+}
 
+function renderResults(searchData) {
+  cardList.innerHTML = "";
+  cardList.style.display = "block";
+  // cardList.classList.remove("hide");
+  resultsContainer.style.display = "none";
+  // resultsContainer.classList.add("hide");
   for (let i = 0; i < searchData.length; i++) {
-    let list = document.createElement("div");
+    const list = document.createElement("div");
     list.dataset.id = searchData[i].imdbID;
     list.classList.add("list");
-    let movieTitle = document.createElement("p");
-    let image = document.createElement("img");
+    const movieTitle = document.createElement("p");
+    const image = document.createElement("img");
     movieTitle.classList.add("movie-title");
     let text = document.createTextNode(searchData[i].Title);
-
-    list.appendChild(movieTitle);
-    movieTitle.appendChild(text);
-    list.appendChild(image);
-    list.appendChild(movieTitle);
-    cardList.appendChild(list);
-    cardsContainer.appendChild(cardList);
-
     if (searchData[i].Poster != "N/A") {
       image.setAttribute("src", searchData[i].Poster);
     }
-    // else {
-    //   image = "./assets/poster-test.jpg";
-    // }
+    // else{}
+    list.appendChild(movieTitle);
+    movieTitle.appendChild(text);
+    list.appendChild(image);
+    cardList.appendChild(list);
   }
   loadDetails();
 }
-
-// function renderResults(movie) {}
 
 function loadDetails() {
   const searchListMovies = cardList.querySelectorAll(".list");
   searchListMovies.forEach((movie) => {
     movie.addEventListener("click", async () => {
       cardList.style.display = "none";
+      // cardList.classList.add("hide");
       searchFieldElement.value = "";
       const result = await fetch(
         `http://www.omdbapi.com/?i=${movie.dataset.id}&apikey=a7a94abb`
@@ -61,6 +65,8 @@ function loadDetails() {
 }
 
 function displayMovieDetails(details) {
+  resultsContainer.style.display = "block";
+  // resultsContainer.classList.remove("hide");
   resultsContainer.innerHTML = `<div class="poster" >
   <img src=${details.Poster} alt="movie poster" />
 
@@ -79,10 +85,6 @@ function displayMovieDetails(details) {
           </ul>
         </div>`;
 }
-
-// if (!searchTerm) {
-//   return;
-// }
 
 async function loadApp() {
   const searchFieldElement = document.getElementById("search-input");
