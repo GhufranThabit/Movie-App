@@ -12,48 +12,28 @@
     <title>app</title>
   </head>
   <body>
-    <!--header-->
     <div class="search-container">
       <p id="logo-1">
         Top
         <span class="logo-2">Movies ..</span>
       </p>
-      <!-- <form action=""> -->
       <input
         type="search"
         name="search"
         id="search-input"
         placeholder="search movie title"
       />
-
-      <button id="home-button" class="home-button" onclick="search(400)">
-        Home
+      <button id="home-button" class="home-button">
+        <a href="/">Home</a>
       </button>
-
-      <!-- <button id="submit-button">Submit</button> -->
-
-      <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
     </div>
-    <!-- <div id="default-page">
-      <img src="./assets/poster-test.jpg" alt="background-img" />
-    </div> -->
-
-    <!--for the movie list-->
     <div id="cards-container">
       <div id="error-message"></div>
       <div id="card-list">
         <div id="list-item"></div>
-        <!-- <div>
-          <button id="previous-button">Previous</button>
-          <button id="next-button">Next</button>
-        </div> -->
       </div>
     </div>
-
-    <!--for the movie results details-->
-
     <div id="results-container"></div>
-
     <script src="app.js"></script>
   </body>
 </html>
