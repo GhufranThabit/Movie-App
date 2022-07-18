@@ -11,7 +11,7 @@ const resultsContainer = document.getElementById("results-container");
 searchMovie(400);
 async function searchMovie(searchTerm) {
   cardList.innerHTML = "";
-  const url = `https://www.omdbapi.com/?s=${searchTerm}&page=1&apikey=a7a94abb`;
+  const url = `https://www.omdbapi.com/?s=${searchTerm}&apikey=a7a94abb`;
   const response = await fetch(url);
   const data = await response.json();
   const searchData = data.Search;
@@ -61,18 +61,20 @@ function loadDetails() {
 }
 
 function displayMovieDetails(details) {
-  resultsContainer.innerHTML = `<div class="poster">
+  resultsContainer.innerHTML = `<div class="poster" >
   <img src=${details.Poster} alt="movie poster" />
+
 </div>
   <div class="movie-details">
-          <h1>${details.Title}</h1><br>
+          <h1>${details.Title}</h1><br><br>
           <ul>
           <li class="plot"> ${details.Plot} </li><br>
-          <li class="genre">Genre: ${details.Genre}</li>
-          <li class="actors">Actors: ${details.Actors}<li>
-          <li class="rated">Runtime: ${details.Runtime}</li>
-          <li class="language">Language: ${details.Language}</li>
-          <li class="year">Year: ${details.Year}</li>
+          <li class="Ratings">Rating: ${details.imdbRating}</li><br>
+          <li class="genre">Genre: ${details.Genre}</li><br>
+          <li class="actors">Actors: ${details.Actors}<li><br>
+          <li class="rated">Runtime: ${details.Runtime}</li><br>
+          <li class="language">Language: ${details.Language}</li><br>
+          <li class="year">Year: ${details.Year}</li><br>
           <li class="released">Released: ${details.Released}</li> 
           </ul>
         </div>`;
