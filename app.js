@@ -1,31 +1,23 @@
 "use strict";
-const apiUrl = "https://www.omdbapi.com/?s=2001&page=1&apikey=a7a94abb";
 
-//will be exported to the constants page
 const searchFieldElement = document.getElementById("search-input");
-const cardsContainer = document.getElementById("cards-container");
 const cardList = document.getElementById("card-list");
+const buttons = document.getElementById("buttons");
 const resultsContainer = document.getElementById("results-container");
-// import {searchFieldElement, cardsContainer, cardList, resultsContainer} from "./"
 
 searchMovie(400);
+
 async function searchMovie(searchTerm, pageIndex = 1) {
   try {
     const data = await fetchMovies(searchTerm, pageIndex);
     if (data.Response == "True") {
       renderResults(data.Search);
-
       document.getElementById("error-message").innerHTML = "";
     }
-    const totalResults = parseInt(data.totalResults, 10);
-    console.log(totalResults);
-    const totalPages = Math.ceil(totalResults / 10);
-    console.log(totalPages);
   } catch (error) {
     document.getElementById("error-message").innerHTML = error;
   }
 }
-
 async function fetchMovies(searchTerm, pageIndex = 1) {
   const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${pageIndex}&apikey=a7a94abb`;
   const response = await fetch(url);
@@ -34,6 +26,7 @@ async function fetchMovies(searchTerm, pageIndex = 1) {
 
 function renderResults(searchData) {
   cardList.innerHTML = "";
+  buttons.classList.remove("hide");
   cardList.classList.remove("hide");
   resultsContainer.classList.add("hide");
   for (let i = 0; i < searchData.length; i++) {
@@ -61,6 +54,7 @@ function loadDetails() {
   searchListMovies.forEach((movie) => {
     movie.addEventListener("click", async () => {
       cardList.classList.add("hide");
+      buttons.classList.add("hide");
       searchFieldElement.value = "";
       const result = await fetch(
         `http://www.omdbapi.com/?i=${movie.dataset.id}&apikey=a7a94abb`
@@ -98,14 +92,12 @@ async function loadApp() {
   let searchValue;
   let pageIndex;
   let totalPages = 0;
+
+  buttons.classList.add("hide");
   searchFieldElement.addEventListener("keyup", () => {
     clearTimeout(timerId);
     if (searchFieldElement.value.trim().length === 0) {
       return;
-    }
-    if (searchFieldElement.value.trim().length < 3) {
-      // cardList.classList.add("hide");
-      console.log("NO RESULTS FOUND");
     }
     timerId = setTimeout(async () => {
       searchValue = searchFieldElement.value.trim();
@@ -114,10 +106,7 @@ async function loadApp() {
       if (data.Response == "True") {
         renderResults(data.Search);
         const totalResults = parseInt(data.totalResults, 10);
-        console.log(totalResults);
         totalPages = Math.ceil(totalResults / 10);
-        console.log(totalPages);
-        document.getElementById("error-message").innerHTML = "";
       }
     }, 500);
   });
@@ -125,20 +114,14 @@ async function loadApp() {
   nextBtn.addEventListener("click", async () => {
     if (pageIndex < totalPages) {
       pageIndex++;
-      const data = await fetchMovies(searchValue, pageIndex);
-      if (data.Response == "True") {
-        renderResults(data.Search);
-      }
+      searchMovie(searchValue, pageIndex);
     }
   });
   const prevBtn = document.getElementById("prev");
   prevBtn.addEventListener("click", async () => {
     if (pageIndex > 1) {
       pageIndex--;
-      const data = await fetchMovies(searchValue, pageIndex);
-      if (data.Response == "True") {
-        renderResults(data.Search);
-      }
+      searchMovie(searchValue, pageIndex);
     }
   });
 }
