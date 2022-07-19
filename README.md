@@ -1,6 +1,6 @@
 ## App Link
 
-[Top Movie App]()
+[Top Movie App](https://ghufranthabit.github.io/Movie-App/)
 
 ## Description
 
@@ -29,7 +29,7 @@ index.html
 - [x] The search result should be rendered as a list of movie posters with their titles.
 
 - [x] Each movie poster will be clickable to open a page with the movie details.
-- [ ] the home button should take the user to the home page
+- [x] the home button should take the user to the home page
 
 - [ ] Support pagination (Prev and Next) buttons if needed for the search results.
 
