@@ -1,25 +1,35 @@
 "use strict";
-// const apiUrl = "https://www.omdbapi.com/?s=2001&page=1&apikey=a7a94abb";
+const apiUrl = "https://www.omdbapi.com/?s=2001&page=1&apikey=a7a94abb";
 
 //will be exported to the constants page
 const searchFieldElement = document.getElementById("search-input");
 const cardsContainer = document.getElementById("cards-container");
 const cardList = document.getElementById("card-list");
 const resultsContainer = document.getElementById("results-container");
+// import {searchFieldElement, cardsContainer, cardList, resultsContainer} from "./"
 
 searchMovie(400);
-async function searchMovie(searchTerm) {
+async function searchMovie(searchTerm, pageIndex = 1) {
   try {
-    const url = `https://www.omdbapi.com/?s=${searchTerm}&apikey=a7a94abb`;
-    const response = await fetch(url);
-    const data = await response.json();
+    const data = await fetchMovies(searchTerm, pageIndex);
     if (data.Response == "True") {
       renderResults(data.Search);
+
       document.getElementById("error-message").innerHTML = "";
     }
+    const totalResults = parseInt(data.totalResults, 10);
+    console.log(totalResults);
+    const totalPages = Math.ceil(totalResults / 10);
+    console.log(totalPages);
   } catch (error) {
     document.getElementById("error-message").innerHTML = error;
   }
+}
+
+async function fetchMovies(searchTerm, pageIndex = 1) {
+  const url = `https://www.omdbapi.com/?s=${searchTerm}&page=${pageIndex}&apikey=a7a94abb`;
+  const response = await fetch(url);
+  return response.json();
 }
 
 function renderResults(searchData) {
@@ -37,7 +47,7 @@ function renderResults(searchData) {
     if (searchData[i].Poster != "N/A") {
       image.setAttribute("src", searchData[i].Poster);
     }
-    // else{}
+
     list.appendChild(image);
     list.appendChild(movieTitle);
     movieTitle.appendChild(text);
@@ -85,43 +95,52 @@ function displayMovieDetails(details) {
 async function loadApp() {
   const searchFieldElement = document.getElementById("search-input");
   let timerId = null;
+  let searchValue;
+  let pageIndex;
+  let totalPages = 0;
   searchFieldElement.addEventListener("keyup", () => {
     clearTimeout(timerId);
     if (searchFieldElement.value.trim().length === 0) {
       return;
     }
-    timerId = setTimeout(() => {
-      searchMovie(searchFieldElement.value.trim());
+    if (searchFieldElement.value.trim().length < 3) {
+      // cardList.classList.add("hide");
+      console.log("NO RESULTS FOUND");
+    }
+    timerId = setTimeout(async () => {
+      searchValue = searchFieldElement.value.trim();
+      pageIndex = 1;
+      const data = await fetchMovies(searchValue, pageIndex);
+      if (data.Response == "True") {
+        renderResults(data.Search);
+        const totalResults = parseInt(data.totalResults, 10);
+        console.log(totalResults);
+        totalPages = Math.ceil(totalResults / 10);
+        console.log(totalPages);
+        document.getElementById("error-message").innerHTML = "";
+      }
     }, 500);
+  });
+  const nextBtn = document.getElementById("next");
+  nextBtn.addEventListener("click", async () => {
+    if (pageIndex < totalPages) {
+      pageIndex++;
+      const data = await fetchMovies(searchValue, pageIndex);
+      if (data.Response == "True") {
+        renderResults(data.Search);
+      }
+    }
+  });
+  const prevBtn = document.getElementById("prev");
+  prevBtn.addEventListener("click", async () => {
+    if (pageIndex > 1) {
+      pageIndex--;
+      const data = await fetchMovies(searchValue, pageIndex);
+      if (data.Response == "True") {
+        renderResults(data.Search);
+      }
+    }
   });
 }
 
 window.addEventListener("load", loadApp);
-
-// function pagination() {
-//   const pages = [];
-//   const firstPage = 0;
-//   const lastPage = pages.length - 1;
-//   const currentPage = 0;
-
-//   //next
-//   const nextBtn = document.getElementById("next");
-//   nextBtn.addEventListener("click", () => {
-//     //get the page
-
-//     currentPage++;
-//     if (currentPage >= lastPage) {
-//       currentPage = lastPage;
-//     }
-//   });
-//   //prev
-//   const prevBtn = document.getElementById("prev");
-//   prevBtn.addEventListener("click", () => {
-//     //get the page
-
-//     currentPage--;
-//     if (currentPage <= firstPage) {
-//       currentPage = 0;
-//     }
-//   });
-// }
