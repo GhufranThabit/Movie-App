@@ -49,9 +49,6 @@ p {
 a {
   color: #1e2640;
 }
-/* .home-button:hover {
-  letter-spacing: 5px;
-} */
 
 #cards-container {
   margin-top: 3%;
@@ -75,9 +72,6 @@ a {
 .list:hover {
   box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.2);
 }
-.hide {
-  display: none;
-}
 
 .movie-title {
   color: #f3eac0;
@@ -91,9 +85,13 @@ img {
   object-fit: cover;
   cursor: pointer;
 }
+.hide {
+  display: none !important;
+}
 #error-message {
+  text-align: center;
   color: #922c40;
-  font-size: 18px;
+  font-size: 30px;
 }
 
 #results-container {
@@ -128,14 +126,23 @@ img {
   background-color: #922c40;
   margin-right: 10px;
 }
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.prev,
+.next {
+  width: 100px;
+  height: 50px;
+  font-size: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #922c40;
+}
 
-/* #next-button,
-#previous-button {
-  color: #dc9750;
-  background-color: transparent;
-  border: transparent;
-  cursor: pointer; */
-/* height: 1rem;
-  width: 4rem; */
-/* margin: 1rem 0.5rem;
-} */
+.prev:hover,
+.next:hover {
+  background-color: #dc9750;
+  color: #f3eac0;
+}

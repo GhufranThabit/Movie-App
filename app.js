@@ -10,7 +10,7 @@ const resultsContainer = document.getElementById("results-container");
 searchMovie(400);
 async function searchMovie(searchTerm) {
   try {
-    const url = `https://www.omdbapi.com/?s=${searchTerm}&page=1&apikey=a7a94abb`;
+    const url = `https://www.omdbapi.com/?s=${searchTerm}&apikey=a7a94abb`;
     const response = await fetch(url);
     const data = await response.json();
     if (data.Response == "True") {
@@ -24,10 +24,8 @@ async function searchMovie(searchTerm) {
 
 function renderResults(searchData) {
   cardList.innerHTML = "";
-  cardList.style.display = "block";
-  // cardList.classList.remove("hide");
-  resultsContainer.style.display = "none";
-  // resultsContainer.classList.add("hide");
+  cardList.classList.remove("hide");
+  resultsContainer.classList.add("hide");
   for (let i = 0; i < searchData.length; i++) {
     const list = document.createElement("div");
     list.dataset.id = searchData[i].imdbID;
@@ -40,9 +38,9 @@ function renderResults(searchData) {
       image.setAttribute("src", searchData[i].Poster);
     }
     // else{}
+    list.appendChild(image);
     list.appendChild(movieTitle);
     movieTitle.appendChild(text);
-    list.appendChild(image);
     cardList.appendChild(list);
   }
   loadDetails();
@@ -52,8 +50,7 @@ function loadDetails() {
   const searchListMovies = cardList.querySelectorAll(".list");
   searchListMovies.forEach((movie) => {
     movie.addEventListener("click", async () => {
-      cardList.style.display = "none";
-      // cardList.classList.add("hide");
+      cardList.classList.add("hide");
       searchFieldElement.value = "";
       const result = await fetch(
         `http://www.omdbapi.com/?i=${movie.dataset.id}&apikey=a7a94abb`
@@ -65,8 +62,7 @@ function loadDetails() {
 }
 
 function displayMovieDetails(details) {
-  resultsContainer.style.display = "block";
-  // resultsContainer.classList.remove("hide");
+  resultsContainer.classList.remove("hide");
   resultsContainer.innerHTML = `<div class="poster" >
   <img src=${details.Poster} alt="movie poster" />
 
@@ -75,13 +71,13 @@ function displayMovieDetails(details) {
           <h1>${details.Title}</h1><br><br>
           <ul>
           <li class="plot"> ${details.Plot} </li><br>
-          <li class="Ratings">Rating: ${details.imdbRating}</li><br>
-          <li class="genre">Genre: ${details.Genre}</li><br>
-          <li class="actors">Actors: ${details.Actors}<li><br>
-          <li class="rated">Runtime: ${details.Runtime}</li><br>
-          <li class="language">Language: ${details.Language}</li><br>
-          <li class="year">Year: ${details.Year}</li><br>
-          <li class="released">Released: ${details.Released}</li> 
+          <li class="Ratings"><strong>Rating: </strong>${details.imdbRating}</li><br>
+          <li class="genre"><strong>Genre: </strong>${details.Genre}</li><br>
+          <li class="actors"><strong>Actors: </strong>${details.Actors}<li><br>
+          <li class="rated"><strong>Runtime:</strong> ${details.Runtime}</li><br>
+          <li class="language"><strong>Language:</strong> ${details.Language}</li><br>
+          <li class="year"><strong>Year:</strong> ${details.Year}</li><br>
+          <li class="released"><strong>Released: </strong>${details.Released}</li> 
           </ul>
         </div>`;
 }
@@ -101,3 +97,31 @@ async function loadApp() {
 }
 
 window.addEventListener("load", loadApp);
+
+// function pagination() {
+//   const pages = [];
+//   const firstPage = 0;
+//   const lastPage = pages.length - 1;
+//   const currentPage = 0;
+
+//   //next
+//   const nextBtn = document.getElementById("next");
+//   nextBtn.addEventListener("click", () => {
+//     //get the page
+
+//     currentPage++;
+//     if (currentPage >= lastPage) {
+//       currentPage = lastPage;
+//     }
+//   });
+//   //prev
+//   const prevBtn = document.getElementById("prev");
+//   prevBtn.addEventListener("click", () => {
+//     //get the page
+
+//     currentPage--;
+//     if (currentPage <= firstPage) {
+//       currentPage = 0;
+//     }
+//   });
+// }
