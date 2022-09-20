@@ -1,6 +1,6 @@
 ## App Link
 
-[Top Movie App](https://ghufranthabit.github.io/Movie-App/)
+[Top Movie App](https://ghufran-movie-app.netlify.app/)
 
 ## Description
 
